@@ -1,0 +1,22 @@
+# Phase 1: only Postgres. Backend/frontend containers arrive in Phase 8.
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: netpulse-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: netpulse
+      POSTGRES_PASSWORD: netpulse
+      POSTGRES_DB: netpulse
+    ports:
+      - "5434:5432"
+    volumes:
+      - netpulse_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U netpulse -d netpulse" ]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  netpulse_pgdata:
